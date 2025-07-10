@@ -19,7 +19,6 @@ public class HanoiTower : MonoBehaviour
 
     IEnumerator Start()
     {
-        countTextUI.text = moveCount.ToString();
 
         for (int i = (int)hanoiLevel - 1; i >= 0; i--) // 반복문으로 Level만큼 도넛 생성
         {
@@ -30,6 +29,8 @@ public class HanoiTower : MonoBehaviour
 
             yield return new WaitForSeconds(1f); // 순차적으로 생성
         }
+        moveCount = 0;
+        countTextUI.text = moveCount.ToString();
     }
 
     void Update()
