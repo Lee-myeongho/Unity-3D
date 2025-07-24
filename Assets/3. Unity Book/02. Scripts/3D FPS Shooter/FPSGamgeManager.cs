@@ -2,7 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 
-public class FPSGameManager : MonoBehaviour
+public class FPSGameManager : Singleton<FPSGameManager>
 {
     public enum GameState { Ready, Run, GameOver }
     public GameState gState;
@@ -10,7 +10,7 @@ public class FPSGameManager : MonoBehaviour
     public GameObject gameLabel;
     private TextMeshProUGUI gameText;
 
-    public FPSPlayerMove player;
+    private FPSPlayerMove player;
 
     void Start()
     {
@@ -29,7 +29,6 @@ public class FPSGameManager : MonoBehaviour
     {
         if (player.hp <= 0)
         {
-            player.GetComponentInChildren<Animator>().SetFloat("MoveMotion", 0f);
             gameLabel.SetActive(true);
             gameText.text = "Game Over";
             gameText.color = new Color32(255, 0, 0, 255);

@@ -3,20 +3,26 @@ using UnityEngine.AI;
 
 public class AgentController : MonoBehaviour
 {
-    public Transform player;
     private NavMeshAgent agent;
+    public Transform[] points;
+    private int index;
 
-    private void Start()
+    void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        player = GameObject.Find("Player").transform;
-
+        agent.SetDestination(points[index].position);
     }
 
-    private void Update()
+    void Update()
     {
-        agent.SetDestination(player.transform.position);
-        
+        if (Vector3.Distance(transform.position, points[index].position) < 3.5f)
+        {
+            index++;
+            if (index >= points.Length)
+            {
+                index = 0;
+            }
+            agent.SetDestination(points[index].position);
+        }
     }
-
 }
