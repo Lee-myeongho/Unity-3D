@@ -11,7 +11,7 @@ public class Path : MonoBehaviour
     {
         return points[index];
     }
-
+    
     void OnDrawGizmos()
     {
         for (int i = 0; i < points.Length; i++)

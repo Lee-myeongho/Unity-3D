@@ -1,25 +1,27 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.UI;
+using UnityEngine.AI;
 
 public class EnemyFSM : MonoBehaviour
 {
     private enum EnemyState { Idle, Move, Attack, Return, Damaged, Die }
     private EnemyState m_State;
 
-    private Transform player; // Å¸°Ù
+    private Transform player; // íƒ€ê²Ÿ
     private CharacterController cc;
 
     private Animator anim;
     private NavMeshAgent smith;
 
-    public float findDistance = 8f; // Å½Áö °Å¸®
-    public float attackDistance = 3f; // °ø°İ °¡´É °Å¸®
-    public float moveSpeed = 5f; // ÀÌµ¿ ¼Óµµ
+    public float findDistance = 8f; // íƒì§€ ê±°ë¦¬
+    public float attackDistance = 3f; // ê³µê²© ê°€ëŠ¥ ê±°ë¦¬
+    public float moveSpeed = 5f; // ì´ë™ ì†ë„
 
-    private float currentTime = 0f; // Å¸ÀÌ¸Ó
-    private float attackDelay = 2f; // °ø°İ µô·¹ÀÌ
+    private float currentTime = 0f; // íƒ€ì´ë¨¸
+    private float attackDelay = 2f; // ê³µê²© ë”œë ˆì´
 
     public int attackPower = 3;
     public int hp = 15;
@@ -40,8 +42,8 @@ public class EnemyFSM : MonoBehaviour
         anim = transform.GetComponentInChildren<Animator>();
         smith = GetComponent<NavMeshAgent>();
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.visible = false;
+        // Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
@@ -77,7 +79,7 @@ public class EnemyFSM : MonoBehaviour
         {
             anim.SetTrigger("IdleToMove");
             m_State = EnemyState.Move;
-            Debug.Log("»óÅÂ ÀüÈ¯ : Idle -> Move");
+            Debug.Log("ìƒíƒœ ì „í™˜ : Idle -> Move");
         }
     }
 
@@ -86,47 +88,44 @@ public class EnemyFSM : MonoBehaviour
         if (Vector3.Distance(transform.position, originPos) > moveDistance)
         {
             m_State = EnemyState.Return;
-            Debug.Log("»óÅÂ ÀüÈ¯ : Move -> Return");
+            Debug.Log("ìƒíƒœ ì „í™˜ : Move -> Return");
         }
-        else if (Vector3.Distance(transform.position, player.position) > attackDistance) // Å¸°ÙÀÌ °ø°İ °Å¸®º¸´Ù ¸Õ °æ¿ì -> ÀÌµ¿ ½ÇÇà
+        else if (Vector3.Distance(transform.position, player.position) > attackDistance) // íƒ€ê²Ÿì´ ê³µê²© ê±°ë¦¬ë³´ë‹¤ ë¨¼ ê²½ìš° -> ì´ë™ ì‹¤í–‰
         {
             smith.isStopped = true;
             smith.ResetPath();
-
+            
             smith.stoppingDistance = attackDistance;
             smith.SetDestination(player.position);
         }
-        else // Å¸°ÙÀÌ °ø°İ °Å¸® ³»¿¡ ÀÖ´Â °æ¿ì -> °ø°İ ÀüÈ¯
+        else // íƒ€ê²Ÿì´ ê³µê²© ê±°ë¦¬ ë‚´ì— ìˆëŠ” ê²½ìš° -> ê³µê²© ì „í™˜
         {
             currentTime = attackDelay;
-            m_State = EnemyState.Attack;
-            Debug.Log("»óÅÂ ÀüÈ¯ : Move -> Attack");
-
             anim.SetTrigger("MoveToAttackDelay");
+            m_State = EnemyState.Attack;
+            Debug.Log("ìƒíƒœ ì „í™˜ : Move -> Attack");
         }
     }
 
     private void Attack()
     {
-        if (Vector3.Distance(transform.position, player.position) < attackDistance) // °ø°İ ¹üÀ§ ³»¿¡ ÀÖ´Â °æ¿ì -> °ø°İ ½ÇÇà
+        if (Vector3.Distance(transform.position, player.position) < attackDistance) // ê³µê²© ë²”ìœ„ ë‚´ì— ìˆëŠ” ê²½ìš° -> ê³µê²© ì‹¤í–‰
         {
             currentTime += Time.deltaTime;
             if (currentTime > attackDelay)
             {
                 currentTime = 0f;
-                //player.GetComponent<FPSPlayerMove>().DamageAction(attackPower);
-
+                // player.GetComponent<FPSPlayerMove>().DamageAction(attackPower);
                 anim.SetTrigger("StartAttack");
-                Debug.Log("°ø°İ");
+                Debug.Log("ê³µê²©");
             }
         }
-        else // °ø°İ ¹üÀ§ ¹Û¿¡ ÀÖÀ» °æ¿ì -> Move ÀüÈ¯
+        else // ê³µê²© ë²”ìœ„ ë°–ì— ìˆì„ ê²½ìš° -> Move ì „í™˜
         {
             currentTime = 0f;
-            m_State = EnemyState.Move;
-            Debug.Log("»óÅÂ ÀüÈ¯ : Attack -> Move");
-
             anim.SetTrigger("AttackToMove");
+            m_State = EnemyState.Move;
+            Debug.Log("ìƒíƒœ ì „í™˜ : Attack -> Move");
         }
     }
 
@@ -137,22 +136,22 @@ public class EnemyFSM : MonoBehaviour
 
     private void Return()
     {
-        if (Vector3.Distance(transform.position, originPos) > 0.1f) // ¿ø·¡ À§Ä¡°¡ ¾Æ´Ñ °æ¿ì -> ¿ø·¡ À§Ä¡·Î ÀÌµ¿
+        if (Vector3.Distance(transform.position, originPos) > 0.1f) // ì›ë˜ ìœ„ì¹˜ê°€ ì•„ë‹Œ ê²½ìš° -> ì›ë˜ ìœ„ì¹˜ë¡œ ì´ë™
         {
             smith.SetDestination(originPos);
             smith.stoppingDistance = 0f;
         }
-        else // ¿ø·¡ À§Ä¡ µµÂøÇÑ °æ¿ì
+        else // ì›ë˜ ìœ„ì¹˜ ë„ì°©í•œ ê²½ìš°
         {
             smith.isStopped = true;
             smith.ResetPath();
-
+            
             transform.position = originPos;
             transform.rotation = originRot;
             hp = 15;
             anim.SetTrigger("MoveToIdle");
             m_State = EnemyState.Idle;
-            Debug.Log("»óÅÂ ÀüÈ¯ : Return -> Idle");
+            Debug.Log("ìƒíƒœ ì „í™˜ : Return -> Idle");
         }
     }
 
@@ -166,18 +165,18 @@ public class EnemyFSM : MonoBehaviour
         smith.isStopped = true;
         smith.ResetPath();
 
-        if (hp > 0) // °ø°İÀ» ¹Ş¾Ò´Âµ¥ »ì¾Ò´Ù¸é
+        if (hp > 0) // ê³µê²©ì„ ë°›ì•˜ëŠ”ë° ì‚´ì•˜ë‹¤ë©´
         {
-            m_State = EnemyState.Damaged;
-            Debug.Log("»óÅÂ ÀüÈ¯ : Any State -> Damaged");
             anim.SetTrigger("Damaged");
+            m_State = EnemyState.Damaged;
+            Debug.Log("ìƒíƒœ ì „í™˜ : Any State -> Damaged");
             Damaged();
         }
-        else // °ø°İÀ» ¹Ş¾Æ¼­ Á×¾ú´Ù¸é
+        else // ê³µê²©ì„ ë°›ì•„ì„œ ì£½ì—ˆë‹¤ë©´
         {
-            m_State = EnemyState.Die;
-            Debug.Log("»óÅÂ ÀüÈ¯ : Any State -> Die");
             anim.SetTrigger("Die");
+            m_State = EnemyState.Die;
+            Debug.Log("ìƒíƒœ ì „í™˜ : Any State -> Die");
             Die();
         }
     }
@@ -189,10 +188,10 @@ public class EnemyFSM : MonoBehaviour
 
     IEnumerator DamageProcess()
     {
-        yield return new WaitForSeconds(1f); // ÇÇ°İ ¾Ö´Ï¸ŞÀÌ¼Ç ½Ã°£¸¸Å­ ´ë±â
+        yield return new WaitForSeconds(1f); // í”¼ê²© ì• ë‹ˆë©”ì´ì…˜ ì‹œê°„ë§Œí¼ ëŒ€ê¸°
 
         m_State = EnemyState.Move;
-        Debug.Log("»óÅÂ ÀüÈ¯ : Damagd -> Move");
+        Debug.Log("ìƒíƒœ ì „í™˜ : Damagd -> Move");
     }
 
     private void Die()
@@ -207,7 +206,7 @@ public class EnemyFSM : MonoBehaviour
         cc.enabled = false;
 
         yield return new WaitForSeconds(2f);
-        Debug.Log("¼Ò¸ê");
+        Debug.Log("ì†Œë©¸");
         Destroy(gameObject);
     }
 }

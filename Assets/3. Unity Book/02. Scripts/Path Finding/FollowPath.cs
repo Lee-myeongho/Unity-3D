@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class FollowPath : MonoBehaviour
 {
@@ -7,12 +7,12 @@ public class FollowPath : MonoBehaviour
     public float mass = 5f;
     public bool isLooping = true;
 
-    public float curSpeed;
-    public int curPathIndex;
-    public int pathLength;
-    public Vector3 targetPoint;
-
-    public Vector3 velocity;
+    private Vector3 targetPoint;
+    private Vector3 velocity;
+    
+    private float curSpeed;
+    private int curPathIndex;
+    private int pathLength;
 
     void Start()
     {
@@ -27,13 +27,12 @@ public class FollowPath : MonoBehaviour
         curSpeed = speed * Time.deltaTime;
         targetPoint = path.GetPoint(curPathIndex);
 
-        // ¸ñÀûÁö¿¡ °ÅÀÇ µµÂøÇÏ¸é ´ÙÀ½ ¸ñÀûÁö·Î ¼³Á¤ÇÏ´Â ±â´É
+        // ëª©ì ì§€ì— ê±°ì˜ ë„ì°©í•˜ë©´ ë‹¤ìŒ ëª©ì ì§€ë¡œ ì„¤ì •í•˜ëŠ” ê¸°ëŠ¥
         if (Vector3.Distance(transform.position, targetPoint) < path.radius)
         {
             if (curPathIndex < pathLength - 1)
             {
                 curPathIndex++;
-                Debug.Log("Next Point");
             }
             else if (isLooping)
                 curPathIndex = 0;
@@ -44,7 +43,7 @@ public class FollowPath : MonoBehaviour
         if (curPathIndex >= pathLength)
             return;
 
-        if (curPathIndex >= pathLength - 1 && !isLooping) // ¹æÇâ ÀüÈ¯
+        if (curPathIndex >= pathLength - 1 && !isLooping) // ë°©í–¥ ì „í™˜
             velocity += Steer(targetPoint, true);
         else
             velocity += Steer(targetPoint);
@@ -57,7 +56,7 @@ public class FollowPath : MonoBehaviour
     {
         Vector3 targetDir = target - transform.position;
         float dist = targetDir.magnitude;
-
+        
         // targetDir = targetDir.normalized;
         targetDir.Normalize();
 

@@ -19,9 +19,8 @@ public class AgentController : MonoBehaviour
         {
             index++;
             if (index >= points.Length)
-            {
                 index = 0;
-            }
+            
             agent.SetDestination(points[index].position);
         }
     }

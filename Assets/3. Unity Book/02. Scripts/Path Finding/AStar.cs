@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class AStar
 {
-    public static PriorityQueue openList; // ¹æ¹®ÇÒ ¼ö ÀÖ´Â ÈÄº¸ ³ëµå
-    public static PriorityQueue closedList; // ÀÌ¹Ì ¹æ¹®ÇÑ ³ëµå
+    public static PriorityQueue openList; // ë°©ë¬¸í•  ìˆ˜ ìˆëŠ” í›„ë³´ ë…¸ë“œ
+    public static PriorityQueue closedList; // ì´ë¯¸ ë°©ë¬¸í•œ ë…¸ë“œ
 
     private static float HeuristicEstimateCost(Node curNode, Node endNode)
     {
         Vector3 cost = curNode.pos - endNode.pos;
-
+        
         return cost.magnitude;
     }
 
@@ -26,7 +26,7 @@ public class AStar
         {
             node = openList.First();
 
-            if (node.pos == endNode.pos) // ¸ñÀûÁö¿¡ µµÂø
+            if (node.pos == endNode.pos) // ëª©ì ì§€ì— ë„ì°©
                 return CalculatePath(node);
 
             List<Node> neighbors = new List<Node>();
@@ -45,12 +45,10 @@ public class AStar
 
                     neighborNode.nodeTotalCost = totalCost;
                     neighborNode.parent = node;
-                    neighborNode.estimateCost = totalCost + neighborNodeEstCost;
+                    neighborNode.estimateCost = neighborNodeEstCost;
 
                     if (!openList.Contains(neighborNode))
-                    {
                         openList.Push(neighborNode);
-                    }
                 }
             }
 
@@ -61,7 +59,7 @@ public class AStar
         if (node.pos != endNode.pos)
         {
             Debug.LogError("Destination Path Not Found");
-
+            
             return null;
         }
 

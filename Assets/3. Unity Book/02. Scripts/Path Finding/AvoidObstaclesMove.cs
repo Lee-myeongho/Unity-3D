@@ -24,27 +24,27 @@ public class AvoidObstaclesMove : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-                targetPoint = hit.point; // ¸¶¿ì½º Å¬¸¯ÇÑ °÷À» ¸ñÇ¥ ÁöÁ¡À¸·Î ¼³Á¤
+                targetPoint = hit.point; // ë§ˆìš°ìŠ¤ í´ë¦­í•œ ê³³ì„ ëª©í‘œ ì§€ì ìœ¼ë¡œ ì„¤ì •
         }
-
+        
         Vector3 dir = targetPoint - transform.position;
         dir.Normalize();
 
-        dir = GetAvoidanceDirection(dir); // Àå¾Ö¹°ÀÌ ¾øÀ¸¸é ±×´ë·Î / ÀÖÀ¸¸é º¯°æµÈ ¹æÇâÀÌ Àû¿ë
+        dir = GetAvoidanceDirection(dir); // ì¥ì• ë¬¼ì´ ì—†ìœ¼ë©´ ê·¸ëŒ€ë¡œ / ìˆìœ¼ë©´ ë³€ê²½ëœ ë°©í–¥ì´ ì ìš©
 
         if (Vector3.Distance(targetPoint, transform.position) < 1f)
             return;
 
         curSpeed = speed * Time.deltaTime;
         transform.position += transform.forward * curSpeed;
-
-        Quaternion rot = Quaternion.LookRotation(dir); // ¹æÇâÀ» ¾Ë·ÁÁÖ´Â º¤ÅÍ¸¦ ³ÖÀ¸¸é ±× ¹æÇâÀ» º¸´Â °ªÀ» ¼³Á¤
+        
+        Quaternion rot = Quaternion.LookRotation(dir); // ë°©í–¥ì„ ì•Œë ¤ì£¼ëŠ” ë²¡í„°ë¥¼ ë„£ìœ¼ë©´ ê·¸ ë°©í–¥ì„ ë³´ëŠ” ê°’ì„ ì„¤ì •
         transform.rotation = Quaternion.Slerp(transform.rotation, rot, steeringForce * Time.deltaTime);
 
 
     }
 
-    // ÀÌµ¿ ¹æÇâ¿¡ Àå¾Ö¹°ÀÌ ÀÖÀ» °æ¿ì ÀÌµ¿ÇÏ·Á´Â ¹æÇâÀ» ¹Ù²Ù´Â ±â´É
+    // ì´ë™ ë°©í–¥ì— ì¥ì• ë¬¼ì´ ìˆì„ ê²½ìš° ì´ë™í•˜ë ¤ëŠ” ë°©í–¥ì„ ë°”ê¾¸ëŠ” ê¸°ëŠ¥
     public Vector3 GetAvoidanceDirection(Vector3 dir)
     {
         RaycastHit hit;

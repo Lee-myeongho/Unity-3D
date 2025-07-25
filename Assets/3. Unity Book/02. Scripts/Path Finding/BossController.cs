@@ -6,11 +6,11 @@ public class BossController : MonoBehaviour
     private NavMeshAgent agent;
     public Transform target;
 
-
-    private void Start()
+    void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
+        agent =  GetComponent<NavMeshAgent>();
     }
+    
     void Update()
     {
         agent.SetDestination(target.position);
